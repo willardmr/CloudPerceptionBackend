@@ -17,7 +17,7 @@ Resources:
               - "s3:ListAllMyBuckets"
             Resource: '*'
       DeploymentPreference:
-          Type: Linear10PercentEvery1Minute
+          #Type: Linear10PercentEvery1Minute
           Hooks:
             PreTraffic: !Ref preTrafficHook
       Events:
