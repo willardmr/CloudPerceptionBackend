@@ -7,7 +7,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: returnS3Buckets.handler
-      Runtime: python3.5.2 
+      Runtime: python3.6
       AutoPublishAlias: live
       Policies:
         - Version: "2012-10-17"
@@ -45,7 +45,7 @@ Resources:
             Action: 
               - "lambda:InvokeFunction"
             Resource: !Ref returnS3Buckets.Version
-      Runtime: python3.5.2 
+      Runtime: python3.6
       FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
