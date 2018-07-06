@@ -9,7 +9,9 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - aws cloudformation package --template-file samTemplate.yaml --output-template-file outputSamTemplate.yaml
 artifacts:
   files:
     - samTemplate.yaml
+    - outputSamTemplate.yaml
     - HelloWorld.py
