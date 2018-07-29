@@ -5,15 +5,18 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Compiling the Python code...
-      - pip install -r requirements.txt
-      - python cloudperception/HelloWorld_tst.py
+      - rm -rf ./build
+      - mkdir ./build
+      - cp -p -r ./cloudperception ./build/cloudperception
+      - pip install -r cloudperception/requirements.txt -t ./build
+
   post_build:
     commands:
       - echo Build completed on `date`
       - aws cloudformation package --template-file samTemplate.yaml --output-template-file outputSamTemplate.yaml --s3-bucket $ARTIFACT_S3_BUCKET
 artifacts:
   files:
-    - *.zip
+    - build/*
       #- samTemplate.yaml
       #- outputSamTemplate.yaml
       #- HelloWorld.py
