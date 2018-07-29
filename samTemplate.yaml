@@ -46,7 +46,6 @@ Resources:
               - "lambda:InvokeFunction"
             Resource: !Ref returnS3Buckets.Version
       Runtime: python3.6
-      FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
       Timeout: 5
