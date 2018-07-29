@@ -6,7 +6,8 @@ Resources:
   returnS3Buckets:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: returnS3Buckets.handler
+      Handler: cloudperception/returnS3Buckets.handler
+      CodeUri: ../build
       Runtime: python3.6
       AutoPublishAlias: live
       Policies:
