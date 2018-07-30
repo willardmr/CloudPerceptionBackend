@@ -15,7 +15,7 @@ Resources:
           Statement: 
           - Effect: "Allow"
             Action: 
-              - "s3:ListAllMyBuckets"
+              - "ses:SendRawEmail"
             Resource: '*'
       DeploymentPreference:
           Type: AllAtOnce
