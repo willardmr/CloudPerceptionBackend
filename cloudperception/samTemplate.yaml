@@ -26,7 +26,15 @@ Resources:
           Type: Api
           Properties:
             Path: /test
-            Method: post
+            Method: POST
+            RestApiId: !Ref MyApi
+
+  lambdaPermissions:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref returnS3Buckets 
+      Principal: apigateway.amazonaws.com
 
   preTrafficHook:
     Type: AWS::Serverless::Function
@@ -53,3 +61,50 @@ Resources:
       Environment:
         Variables:
           NewVersion: !Ref returnS3Buckets.Version
+
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+        StageName: prod
+        DefinitionBody:
+            swagger: 2.0
+            info:
+              title:
+                Ref: AWS::StackName
+            schemes:
+            - "https"
+            paths:
+              /test:
+                post:
+                  x-amazon-apigateway-integration:
+                    httpMethod: POST
+                    type: aws_proxy
+                    uri:
+                        Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${returnS3Buckets.Arn}/invocations
+                  responses: {}
+                  parameters:
+                    - in: body
+                      name: body
+                      description: Pet object that needs to be added to the store
+                      required: true 
+                      schema:
+                        type: array
+                        items:
+                          $ref: "#/definitions/CloudPerceptionMarker"
+
+            definitions:
+              CloudPerceptionMarker:
+                required:
+                  - id
+                  - x
+                  - y
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  x:
+                    type: number 
+                    format: double 
+                  y:
+                    type: number 
+                    format: double 
