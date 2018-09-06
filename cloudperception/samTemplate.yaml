@@ -3,10 +3,10 @@ Transform: AWS::Serverless-2016-10-31
 Description: An example SAM template for Lambda Safe Deployments.
 
 Resources:
-  returnS3Buckets:
+  generateTemplate:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: cloudperception/returnS3Buckets.handler
+      Handler: cloudperception/generateTemplate.handler
       CodeUri: ../build
       Runtime: python3.6
       AutoPublishAlias: live
@@ -33,7 +33,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Ref returnS3Buckets 
+      FunctionName: !Ref generateTemplate
       Principal: apigateway.amazonaws.com
 
   preTrafficHook:
@@ -53,14 +53,14 @@ Resources:
           - Effect: "Allow"
             Action: 
               - "lambda:InvokeFunction"
-            Resource: !Ref returnS3Buckets.Version
+            Resource: !Ref generateTemplate.Version
       Runtime: python3.6
       DeploymentPreference:
         Enabled: false
       Timeout: 5
       Environment:
         Variables:
-          NewVersion: !Ref returnS3Buckets.Version
+          NewVersion: !Ref generateTemplate.Version
 
   MyApi:
     Type: AWS::Serverless::Api
@@ -80,7 +80,7 @@ Resources:
                     httpMethod: POST
                     type: aws_proxy
                     uri:
-                        Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${returnS3Buckets.Arn}/invocations
+                        Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${generateTemplate.Arn}/invocations
                   responses: {}
                   parameters:
                     - in: body
